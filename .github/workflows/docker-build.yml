@@ -1,0 +1,35 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Build and Push Docker Image
+        env:
+          CLIENT_ID: ${{ steps.azure_login.outputs.client_id }}
+          CLIENT_SECRET: ${{ steps.azure_login.outputs.client_secret }}
+        run: |
+          docker build -t img_webui:v1.0.0 .
+          docker login djibyACR.azurecr.io -u $CLIENT_ID -p $CLIENT_SECRET
+          docker tag img_webui:v1.0.0 djibyACR.azurecr.io/img_webui:v1.0.0
+          docker push djibyACR.azurecr.io/img_webui:v1.0.0
+
+      - name: Login to Azure
+        id: azure_login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}

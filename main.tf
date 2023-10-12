@@ -1,10 +1,11 @@
 provider "azurerm" {
   features {}
+  skip_provider_registration = true
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = var.resource_group_name
-  location = var.resource_group_location
+  name     = "1-c4b664c5-playground-sandbox"
+  location = "East US"
 }
 
 resource "azurerm_container_registry" "acr" {
@@ -15,6 +16,16 @@ resource "azurerm_container_registry" "acr" {
   admin_enabled       = var.admin_enabled
 }
 
+data "azurerm_client_config" "current" {}
+
+output "client_id" {
+  value = data.azurerm_client_config.current.client_id
+}
+
+output "client_secret" {
+  value = azurerm_container_registry.acr.admin_password
+  sensitive = true
+}
 output "acr_login_server" {
   value = azurerm_container_registry.acr.login_server
 }
