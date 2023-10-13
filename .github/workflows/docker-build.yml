@@ -3,7 +3,7 @@ name: Docker Build and Push
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   build:
@@ -12,6 +12,12 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
+
+      - name: Login to Azure
+        id: azure_login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -27,9 +33,3 @@ jobs:
           echo $CLIENT_SECRET | docker login -u $CLIENT_ID --password-stdin djibyacr.azurecr.io
           docker tag img_webui:v1.0.0 djibyacr.azurecr.io/img_webui:v1.0.0
           docker push djibyacr.azurecr.io/img_webui:v1.0.0
-
-      - name: Login to Azure
-        id: azure_login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
