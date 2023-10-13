@@ -38,5 +38,7 @@ jobs:
           CLIENT_SECRET: ${{ steps.azure_login.outputs.client_secret }}
         run: |
           docker build -t img_webui:v1.0.0 .
+          echo $CLIENT_ID
+          echo $CLIENT_SECRET
           docker tag img_webui:v1.0.0 djibyacr.azurecr.io/img_webui:v1.0.0
           docker push djibyacr.azurecr.io/img_webui:v1.0.0
