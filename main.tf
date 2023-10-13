@@ -4,8 +4,8 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "1-c4b664c5-playground-sandbox"
-  location = "East US"
+  name     = "1-d4b50cf5-playground-sandbox"
+  location = "South Central US"
 }
 
 resource "azurerm_container_registry" "acr" {
